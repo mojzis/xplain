@@ -74,7 +74,7 @@ bun dev            # Development server
 bun run build      # Production build → dist/
 bun run preview    # Preview production build
 bun run typecheck  # TypeScript validation
-bun test           # Run Vitest tests
+bun run test       # Run Vitest tests (ALWAYS run before committing!)
 ```
 
 ### Each Implementation Step Must:
@@ -115,6 +115,7 @@ Track progress in `docs/IMPLEMENTATION_GUIDE.md`:
 
 ## Important Notes
 
+- **ALWAYS run tests before committing**: Run `bun run test` (not `bun test`) to ensure all tests pass. Tests use Vitest with happy-dom for DOM APIs.
 - **Privacy first**: All processing client-side, no data sent externally
 - **SQL Server is primary**: Most complete parser, others can be basic
 - **Static deployment**: Output is just HTML/JS/CSS, works anywhere
