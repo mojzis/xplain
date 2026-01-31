@@ -97,10 +97,10 @@ Track progress in `docs/IMPLEMENTATION_GUIDE.md`:
 - [x] Step 5: Oracle parser
 - [x] Step 6: Parser index
 - [x] Step 7: Plan input component
-- [ ] Step 8: Tree layout
-- [ ] Step 9: Plan node component
-- [ ] Step 10: SVG connectors
-- [ ] Step 11: Plan tree component
+- [x] Step 8: Tree layout
+- [x] Step 9: Plan node component
+- [x] Step 10: SVG connectors
+- [x] Step 11: Plan tree component
 - [ ] Step 12: Overview panel
 - [ ] Step 13: Detail panel
 - [ ] Step 14: App integration
