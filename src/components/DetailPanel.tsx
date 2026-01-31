@@ -10,7 +10,7 @@ export function DetailPanel({ node, onClose }: DetailPanelProps) {
   if (!node) return null;
 
   return (
-    <div className="w-80 bg-white border-l border-gray-200 p-4 overflow-y-auto flex-shrink-0">
+    <div className="flex flex-col flex-1 overflow-hidden">
       <div className="flex justify-between items-start mb-4">
         <h2 className="text-lg font-semibold text-gray-800 pr-2">{node.operation}</h2>
         <button
@@ -22,7 +22,7 @@ export function DetailPanel({ node, onClose }: DetailPanelProps) {
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 flex flex-col flex-1 min-h-0 overflow-hidden">
         {node.objectName && <DetailRow label="Object" value={node.objectName} />}
 
         {node.estimatedRows !== undefined && (
@@ -78,11 +78,11 @@ export function DetailPanel({ node, onClose }: DetailPanelProps) {
           </div>
         )}
 
-        <div>
-          <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+        <div className="flex-1 flex flex-col min-h-0">
+          <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2 flex-shrink-0">
             Properties
           </div>
-          <div className="bg-gray-50 rounded p-2 max-h-48 overflow-y-auto">
+          <div className="bg-gray-50 rounded p-2 flex-1 overflow-y-auto min-h-[200px]">
             <pre className="text-xs text-gray-600 whitespace-pre-wrap break-all">
               {formatProperties(node.properties)}
             </pre>

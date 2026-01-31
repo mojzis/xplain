@@ -15,10 +15,10 @@ export function OverviewPanel({ plan }: OverviewPanelProps) {
   const stats = calculateStats(plan.rootNode);
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 p-4 overflow-y-auto flex-shrink-0">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">Plan Overview</h2>
+    <div className="flex flex-col flex-1 overflow-hidden">
+      <h2 className="text-lg font-semibold text-gray-800 mb-4 flex-shrink-0">Plan Overview</h2>
 
-      <div className="space-y-4">
+      <div className="space-y-4 flex flex-col flex-1 min-h-0">
         <StatRow label="Database" value={formatDatabase(plan.database)} />
 
         {plan.totalCost !== undefined && (
@@ -52,11 +52,11 @@ export function OverviewPanel({ plan }: OverviewPanelProps) {
         )}
 
         {plan.statementText && (
-          <div>
+          <div className="flex-1 flex flex-col min-h-0">
             <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
               Statement
             </div>
-            <div className="text-xs text-gray-600 font-mono bg-gray-50 p-2 rounded max-h-32 overflow-y-auto whitespace-pre-wrap break-all">
+            <div className="text-xs text-gray-600 font-mono bg-gray-50 p-2 rounded flex-1 overflow-y-auto whitespace-pre-wrap break-all min-h-[200px]">
               {plan.statementText}
             </div>
           </div>
