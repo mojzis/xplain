@@ -96,7 +96,7 @@ Track progress in `docs/IMPLEMENTATION_GUIDE.md`:
 - [x] Step 4: PostgreSQL parser
 - [x] Step 5: Oracle parser
 - [x] Step 6: Parser index
-- [ ] Step 7: Plan input component
+- [x] Step 7: Plan input component
 - [ ] Step 8: Tree layout
 - [ ] Step 9: Plan node component
 - [ ] Step 10: SVG connectors

@@ -29,7 +29,7 @@ Build a static, client-side web app that visualizes database query execution pla
 - [x] Step 4: PostgreSQL JSON parser
 - [x] Step 5: Oracle text parser
 - [x] Step 6: Parser index & auto-detection
-- [ ] Step 7: Plan input component
+- [x] Step 7: Plan input component
 - [ ] Step 8: Tree layout algorithm
 - [ ] Step 9: Plan node component
 - [ ] Step 10: SVG connectors
