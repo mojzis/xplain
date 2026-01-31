@@ -101,8 +101,8 @@ Track progress in `docs/IMPLEMENTATION_GUIDE.md`:
 - [x] Step 9: Plan node component
 - [x] Step 10: SVG connectors
 - [x] Step 11: Plan tree component
-- [ ] Step 12: Overview panel
-- [ ] Step 13: Detail panel
+- [x] Step 12: Overview panel
+- [x] Step 13: Detail panel
 - [ ] Step 14: App integration
 - [ ] Step 15: Final build
 

@@ -34,8 +34,8 @@ Build a static, client-side web app that visualizes database query execution pla
 - [x] Step 9: Plan node component
 - [x] Step 10: SVG connectors
 - [x] Step 11: Plan tree component
-- [ ] Step 12: Overview panel
-- [ ] Step 13: Detail panel
+- [x] Step 12: Overview panel
+- [x] Step 13: Detail panel
 - [ ] Step 14: Main app integration
 - [ ] Step 15: Final polish & build
 
