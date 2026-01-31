@@ -25,10 +25,10 @@ Build a static, client-side web app that visualizes database query execution pla
 - [x] Step 0: Environment setup
 - [x] Step 1: Project scaffolding (Vite + React + Tailwind)
 - [x] Step 2: Core types & interfaces
-- [ ] Step 3: SQL Server XML parser
-- [ ] Step 4: PostgreSQL JSON parser
-- [ ] Step 5: Oracle text parser
-- [ ] Step 6: Parser index & auto-detection
+- [x] Step 3: SQL Server XML parser
+- [x] Step 4: PostgreSQL JSON parser
+- [x] Step 5: Oracle text parser
+- [x] Step 6: Parser index & auto-detection
 - [ ] Step 7: Plan input component
 - [ ] Step 8: Tree layout algorithm
 - [ ] Step 9: Plan node component

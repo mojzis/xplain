@@ -92,10 +92,10 @@ Track progress in `docs/IMPLEMENTATION_GUIDE.md`:
 - [x] Step 0: Environment setup
 - [x] Step 1: Project scaffolding
 - [x] Step 2: Core types
-- [ ] Step 3: SQL Server parser
-- [ ] Step 4: PostgreSQL parser
-- [ ] Step 5: Oracle parser
-- [ ] Step 6: Parser index
+- [x] Step 3: SQL Server parser
+- [x] Step 4: PostgreSQL parser
+- [x] Step 5: Oracle parser
+- [x] Step 6: Parser index
 - [ ] Step 7: Plan input component
 - [ ] Step 8: Tree layout
 - [ ] Step 9: Plan node component
