@@ -78,7 +78,7 @@ function parseOracleLine(line: string, index: number): OracleRow {
   let cost: number | undefined;
   if (costStr) {
     const costMatch = costStr.match(/^(\d+)/);
-    if (costMatch) {
+    if (costMatch?.[1]) {
       cost = parseInt(costMatch[1], 10);
     }
   }
