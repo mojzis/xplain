@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import type { ParsedPlan, PlanNode } from '../types/plan';
 
 interface OverviewPanelProps {
@@ -16,34 +17,41 @@ export function OverviewPanel({ plan }: OverviewPanelProps) {
 
   return (
     <div className="flex flex-col flex-1 overflow-hidden">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4 flex-shrink-0">Plan Overview</h2>
+      <h2 className="text-lg font-semibold text-gray-900 mb-4 flex-shrink-0">Plan Overview</h2>
 
-      <div className="space-y-4 flex flex-col flex-1 min-h-0">
-        <StatRow label="Database" value={formatDatabase(plan.database)} />
+      <div className="space-y-4 flex flex-col flex-1 min-h-0 overflow-y-auto">
+        {/* Database badge */}
+        <div>
+          <Label>Database</Label>
+          <div className="mt-1">
+            <DatabaseBadge database={plan.database} />
+          </div>
+        </div>
 
-        {plan.totalCost !== undefined && (
-          <StatRow label="Total Cost" value={plan.totalCost.toFixed(4)} />
-        )}
+        {/* Stats grid */}
+        <div className="grid grid-cols-2 gap-3">
+          {plan.totalCost !== undefined && (
+            <StatCard label="Total Cost" value={plan.totalCost.toFixed(4)} />
+          )}
+          <StatCard label="Parse Time" value={`${plan.parseTime.toFixed(2)} ms`} />
+          <StatCard label="Operators" value={stats.nodeCount.toString()} />
+          <StatCard label="Tree Depth" value={stats.maxDepth.toString()} />
+        </div>
 
-        <StatRow label="Parse Time" value={`${plan.parseTime.toFixed(2)} ms`} />
-
-        <StatRow label="Operators" value={stats.nodeCount.toString()} />
-
-        <StatRow label="Tree Depth" value={stats.maxDepth.toString()} />
-
+        {/* Warnings summary */}
         {stats.warningCount > 0 && (
           <div>
-            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-              Warnings
-            </div>
-            <div className="mt-1 flex gap-2">
+            <Label>Warnings</Label>
+            <div className="mt-1.5 flex gap-2">
               {stats.criticalCount > 0 && (
-                <span className="text-sm text-red-600 font-medium">
+                <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-red-100 text-red-700">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
                   {stats.criticalCount} critical
                 </span>
               )}
               {stats.warningCount - stats.criticalCount > 0 && (
-                <span className="text-sm text-yellow-600 font-medium">
+                <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-yellow-100 text-yellow-700">
+                  <span className="w-1.5 h-1.5 rounded-full bg-yellow-500" />
                   {stats.warningCount - stats.criticalCount} warning
                 </span>
               )}
@@ -51,13 +59,14 @@ export function OverviewPanel({ plan }: OverviewPanelProps) {
           </div>
         )}
 
+        {/* SQL Statement */}
         {plan.statementText && (
           <div className="flex-1 flex flex-col min-h-0">
-            <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
-              Statement
-            </div>
-            <div className="text-xs text-gray-600 font-mono bg-gray-50 p-2 rounded flex-1 overflow-y-auto whitespace-pre-wrap break-all min-h-[200px]">
-              {plan.statementText}
+            <Label>Statement</Label>
+            <div className="mt-1.5 flex-1 min-h-[180px] bg-gray-900 rounded-lg overflow-hidden">
+              <pre className="h-full overflow-auto p-3 text-xs text-gray-100 font-mono whitespace-pre-wrap break-all">
+                <code>{highlightSQL(plan.statementText)}</code>
+              </pre>
             </div>
           </div>
         )}
@@ -66,15 +75,69 @@ export function OverviewPanel({ plan }: OverviewPanelProps) {
   );
 }
 
-function StatRow({ label, value }: { label: string; value: string }) {
+function Label({ children }: { children: React.ReactNode }) {
   return (
-    <div>
-      <div className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-        {label}
-      </div>
-      <div className="text-sm text-gray-800 mt-1">{value}</div>
+    <div className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+      {children}
     </div>
   );
+}
+
+function StatCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="bg-gray-50 rounded-lg p-2.5">
+      <div className="text-xs text-gray-500">{label}</div>
+      <div className="text-sm font-semibold text-gray-900 mt-0.5">{value}</div>
+    </div>
+  );
+}
+
+function DatabaseBadge({ database }: { database: string }) {
+  const config = getDatabaseConfig(database);
+  return (
+    <span
+      className={clsx(
+        'inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full',
+        config.className
+      )}
+    >
+      <span className={clsx('w-2 h-2 rounded-full', config.dotClassName)} />
+      {config.label}
+    </span>
+  );
+}
+
+function getDatabaseConfig(db: string): {
+  label: string;
+  className: string;
+  dotClassName: string;
+} {
+  switch (db) {
+    case 'sqlserver':
+      return {
+        label: 'SQL Server',
+        className: 'bg-blue-100 text-blue-800',
+        dotClassName: 'bg-blue-500',
+      };
+    case 'postgresql':
+      return {
+        label: 'PostgreSQL',
+        className: 'bg-indigo-100 text-indigo-800',
+        dotClassName: 'bg-indigo-500',
+      };
+    case 'oracle':
+      return {
+        label: 'Oracle',
+        className: 'bg-red-100 text-red-800',
+        dotClassName: 'bg-red-500',
+      };
+    default:
+      return {
+        label: db,
+        className: 'bg-gray-100 text-gray-800',
+        dotClassName: 'bg-gray-500',
+      };
+  }
 }
 
 function calculateStats(root: PlanNode): PlanStats {
@@ -99,15 +162,29 @@ function calculateStats(root: PlanNode): PlanStats {
   return { nodeCount, warningCount, criticalCount, maxDepth };
 }
 
-function formatDatabase(db: string): string {
-  switch (db) {
-    case 'sqlserver':
-      return 'SQL Server';
-    case 'postgresql':
-      return 'PostgreSQL';
-    case 'oracle':
-      return 'Oracle';
-    default:
-      return db;
+// Simple SQL syntax highlighting
+function highlightSQL(sql: string): React.ReactNode {
+  const keywords = /\b(SELECT|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|OUTER|ON|AND|OR|NOT|IN|AS|ORDER|BY|GROUP|HAVING|LIMIT|OFFSET|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|TABLE|INDEX|VIEW|SET|VALUES|INTO|DISTINCT|COUNT|SUM|AVG|MIN|MAX|CASE|WHEN|THEN|ELSE|END|NULL|IS|LIKE|BETWEEN|EXISTS|UNION|ALL|TOP|WITH|OVER|PARTITION|ROW_NUMBER|RANK|DENSE_RANK)\b/gi;
+
+  const parts = sql.split(keywords);
+  const matches = sql.match(keywords) || [];
+
+  const result: React.ReactNode[] = [];
+  let matchIndex = 0;
+
+  for (let i = 0; i < parts.length; i++) {
+    if (parts[i]) {
+      result.push(<span key={`part-${i}`} className="text-gray-100">{parts[i]}</span>);
+    }
+    if (matchIndex < matches.length) {
+      result.push(
+        <span key={`match-${matchIndex}`} className="text-blue-400 font-medium">
+          {matches[matchIndex]}
+        </span>
+      );
+      matchIndex++;
+    }
   }
+
+  return result;
 }

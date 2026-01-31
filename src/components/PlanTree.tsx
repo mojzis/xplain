@@ -16,6 +16,8 @@ export function PlanTree({ plan, onNodeSelect, selectedNodeId }: PlanTreeProps) 
 
   const bounds = useMemo(() => getTreeBounds(layout), [layout]);
 
+  const totalCost = plan.totalCost ?? plan.rootNode.estimatedCost ?? 1;
+
   function renderNode(layoutNode: LayoutNode): React.ReactNode {
     return (
       <div key={layoutNode.node.id}>
@@ -29,6 +31,7 @@ export function PlanTree({ plan, onNodeSelect, selectedNodeId }: PlanTreeProps) 
           <PlanNode
             node={layoutNode.node}
             isSelected={selectedNodeId === layoutNode.node.id}
+            totalCost={totalCost}
             onClick={() => {
               if (selectedNodeId === layoutNode.node.id) {
                 onNodeSelect(null);

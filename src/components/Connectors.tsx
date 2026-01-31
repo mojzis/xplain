@@ -4,7 +4,7 @@ interface ConnectorsProps {
   layout: LayoutNode;
 }
 
-interface Line {
+interface Connection {
   x1: number;
   y1: number;
   x2: number;
@@ -12,9 +12,9 @@ interface Line {
 }
 
 export function Connectors({ layout }: ConnectorsProps) {
-  const lines: Line[] = [];
+  const connections: Connection[] = [];
 
-  function collectLines(node: LayoutNode): void {
+  function collectConnections(node: LayoutNode): void {
     const parentX = node.position.x + node.width / 2;
     const parentY = node.position.y + node.height;
 
@@ -22,30 +22,51 @@ export function Connectors({ layout }: ConnectorsProps) {
       const childX = child.position.x + child.width / 2;
       const childY = child.position.y;
 
-      lines.push({
+      connections.push({
         x1: parentX,
         y1: parentY,
         x2: childX,
         y2: childY,
       });
 
-      collectLines(child);
+      collectConnections(child);
     }
   }
 
-  collectLines(layout);
+  collectConnections(layout);
 
   return (
     <svg className="absolute inset-0 pointer-events-none overflow-visible">
-      {lines.map((line, i) => {
-        const midY = (line.y1 + line.y2) / 2;
+      <defs>
+        <marker
+          id="arrowhead"
+          markerWidth="8"
+          markerHeight="6"
+          refX="7"
+          refY="3"
+          orient="auto"
+        >
+          <polygon points="0 0, 8 3, 0 6" fill="#94a3b8" />
+        </marker>
+      </defs>
+      {connections.map((conn, i) => {
+        // Calculate control points for smooth bezier curve
+        const deltaY = conn.y2 - conn.y1;
+        const controlOffset = Math.min(deltaY * 0.5, 30);
+
+        const path = `M ${conn.x1} ${conn.y1}
+          C ${conn.x1} ${conn.y1 + controlOffset},
+            ${conn.x2} ${conn.y2 - controlOffset},
+            ${conn.x2} ${conn.y2}`;
+
         return (
           <path
             key={i}
-            d={`M ${line.x1} ${line.y1} C ${line.x1} ${midY}, ${line.x2} ${midY}, ${line.x2} ${line.y2}`}
+            d={path}
             fill="none"
-            stroke="#9CA3AF"
+            stroke="#cbd5e1"
             strokeWidth={2}
+            markerEnd="url(#arrowhead)"
           />
         );
       })}
