@@ -1,2 +1,12 @@
-// Core types will be defined in Step 2
-export {}
+export type {
+  DatabaseType,
+  WarningSeverity,
+  WarningType,
+  Warning,
+  PlanNode,
+  ParsedPlan,
+} from './plan';
+
+export type { Position, LayoutNode, LayoutConfig } from './layout';
+
+export { DEFAULT_LAYOUT_CONFIG } from './layout';

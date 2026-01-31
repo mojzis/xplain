@@ -91,7 +91,7 @@ Track progress in `docs/IMPLEMENTATION_GUIDE.md`:
 
 - [x] Step 0: Environment setup
 - [x] Step 1: Project scaffolding
-- [ ] Step 2: Core types
+- [x] Step 2: Core types
 - [ ] Step 3: SQL Server parser
 - [ ] Step 4: PostgreSQL parser
 - [ ] Step 5: Oracle parser
