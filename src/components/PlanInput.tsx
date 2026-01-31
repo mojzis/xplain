@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { clsx } from 'clsx';
 import type { DatabaseType, ParsedPlan } from '../types/plan';
 import { parsePlan, detectPlanType } from '../parsers';
@@ -13,6 +13,7 @@ export function PlanInput({ onPlanParsed }: PlanInputProps) {
   const [input, setInput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleParse = useCallback(() => {
     if (!input.trim()) {
@@ -68,6 +69,33 @@ export function PlanInput({ onPlanParsed }: PlanInputProps) {
     setIsDragOver(false);
   }, []);
 
+  const handleFileSelect = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const content = event.target?.result;
+          if (typeof content === 'string') {
+            setInput(content);
+            setError(null);
+            const detected = detectPlanType(content);
+            if (detected) {
+              setSelectedDb(detected);
+            }
+          }
+        };
+        reader.onerror = () => {
+          setError('Failed to read file');
+        };
+        reader.readAsText(file);
+      }
+      // Reset input so the same file can be selected again
+      e.target.value = '';
+    },
+    []
+  );
+
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const value = e.target.value;
@@ -104,8 +132,25 @@ export function PlanInput({ onPlanParsed }: PlanInputProps) {
           value={input}
           onChange={handleInputChange}
           placeholder={placeholder}
-          className="w-full h-64 p-4 font-mono text-sm resize-none focus:outline-none bg-transparent"
+          className="w-full h-64 p-4 pb-12 font-mono text-sm resize-none focus:outline-none bg-transparent"
           spellCheck={false}
+        />
+        <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-sm text-gray-500">
+          <span>Paste, drag & drop, or upload a file</span>
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="px-3 py-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded transition-colors"
+          >
+            Browse files...
+          </button>
+        </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".sqlplan,.xml,.json,.txt"
+          onChange={handleFileSelect}
+          className="hidden"
         />
         {isDragOver && (
           <div className="absolute inset-0 flex items-center justify-center bg-blue-50/80 pointer-events-none">

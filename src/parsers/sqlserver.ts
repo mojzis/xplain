@@ -50,39 +50,18 @@ function parseRelOp(element: Element, idCounter: { value: number }): PlanNode {
 
   const children: PlanNode[] = [];
 
-  // Direct child RelOps
+  // Find all child RelOp elements - they can be direct children
+  // or nested one level deep inside operation-specific containers
   for (const child of element.children) {
     if (child.tagName === 'RelOp') {
+      // Direct child RelOp
       children.push(parseRelOp(child, idCounter));
-    }
-  }
-
-  // RelOps nested in operation-specific elements
-  const operationContainers = [
-    'Hash',
-    'Parallelism',
-    'NestedLoops',
-    'Merge',
-    'Sort',
-    'StreamAggregate',
-    'Filter',
-    'Top',
-    'IndexScan',
-    'TableScan',
-    'ClusteredIndexScan',
-    'ClusteredIndexSeek',
-    'IndexSeek',
-    'Spool',
-    'Concatenation',
-    'ComputeScalar',
-  ];
-
-  for (const containerName of operationContainers) {
-    const container = element.querySelector(`:scope > ${containerName}`);
-    if (container) {
-      for (const child of container.children) {
-        if (child.tagName === 'RelOp') {
-          children.push(parseRelOp(child, idCounter));
+    } else {
+      // Look for RelOp elements inside operation containers
+      // (e.g., Sort/RelOp, Filter/RelOp, Segment/RelOp, etc.)
+      for (const grandchild of child.children) {
+        if (grandchild.tagName === 'RelOp') {
+          children.push(parseRelOp(grandchild, idCounter));
         }
       }
     }
