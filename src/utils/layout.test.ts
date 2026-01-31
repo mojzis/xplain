@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { calculateLayout, getTreeBounds } from './layout';
+import { DEFAULT_LAYOUT_CONFIG } from '../types/layout';
 import type { PlanNode } from '../types/plan';
+
+const { nodeWidth, nodeHeight, horizontalGap, verticalGap } = DEFAULT_LAYOUT_CONFIG;
 
 function createNode(id: string, children: PlanNode[] = []): PlanNode {
   return {
@@ -19,8 +22,8 @@ describe('Layout Algorithm', () => {
 
     expect(layout.position.x).toBe(0);
     expect(layout.position.y).toBe(0);
-    expect(layout.width).toBe(200);
-    expect(layout.height).toBe(80);
+    expect(layout.width).toBe(nodeWidth);
+    expect(layout.height).toBe(nodeHeight);
   });
 
   it('positions children below parent', () => {
@@ -28,7 +31,7 @@ describe('Layout Algorithm', () => {
     const layout = calculateLayout(node);
 
     expect(layout.children.length).toBe(1);
-    expect(layout.children[0]?.position.y).toBe(80 + 60); // nodeHeight + verticalGap
+    expect(layout.children[0]?.position.y).toBe(nodeHeight + verticalGap);
   });
 
   it('centers parent over children', () => {
@@ -56,7 +59,7 @@ describe('Layout Algorithm', () => {
 
     if (leftChild && rightChild) {
       const gap = rightChild.position.x - (leftChild.position.x + leftChild.width);
-      expect(gap).toBe(40); // horizontalGap
+      expect(gap).toBe(horizontalGap);
     }
   });
 
@@ -83,8 +86,8 @@ describe('getTreeBounds', () => {
     const layout = calculateLayout(node);
     const bounds = getTreeBounds(layout);
 
-    expect(bounds.width).toBe(200);
-    expect(bounds.height).toBe(80);
+    expect(bounds.width).toBe(nodeWidth);
+    expect(bounds.height).toBe(nodeHeight);
   });
 
   it('returns bounds for wide tree', () => {
@@ -96,9 +99,9 @@ describe('getTreeBounds', () => {
     const layout = calculateLayout(node);
     const bounds = getTreeBounds(layout);
 
-    // 3 nodes * 200 + 2 gaps * 40 = 680
-    expect(bounds.width).toBe(680);
-    // 2 levels: 80 + 60 + 80 = 220
-    expect(bounds.height).toBe(220);
+    // 3 nodes * nodeWidth + 2 gaps * horizontalGap
+    expect(bounds.width).toBe(3 * nodeWidth + 2 * horizontalGap);
+    // 2 levels: nodeHeight + verticalGap + nodeHeight
+    expect(bounds.height).toBe(2 * nodeHeight + verticalGap);
   });
 });
