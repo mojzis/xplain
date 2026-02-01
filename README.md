@@ -1,73 +1,53 @@
-# React + TypeScript + Vite
+# xplain
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A browser-based query execution plan visualizer for SQL Server, PostgreSQL, and Oracle databases.
 
-Currently, two official plugins are available:
+**[Try it live on GitHub Pages](https://mojzis.github.io/xplain/)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Why xplain?
 
-## React Compiler
+- **Privacy first** - All parsing and rendering happens in your browser. Your query plans never leave your machine.
+- **Multi-database** - Supports SQL Server XML plans, PostgreSQL JSON plans, and Oracle text plans.
+- **Zero setup** - No installation, no accounts, no servers. Just paste your plan and visualize.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Supported Formats
 
-## Expanding the ESLint configuration
+| Database   | Format | How to generate |
+|------------|--------|-----------------|
+| SQL Server | XML    | `SET STATISTICS XML ON` or save as `.sqlplan` |
+| PostgreSQL | JSON   | `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)` |
+| Oracle     | Text   | `DBMS_XPLAN.DISPLAY_CURSOR` |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Run Locally
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+```bash
+# Clone the repository
+git clone https://github.com/mojzis/xplain.git
+cd xplain
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# Install dependencies
+bun install
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Start development server
+bun dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Then open http://localhost:5173 in your browser.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Build for Production
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+bun run build
 ```
+
+Static files are output to `dist/` and can be deployed anywhere.
+
+## Tech Stack
+
+- React 18 + TypeScript
+- Tailwind CSS
+- Vite
+
+## License
+
+MIT

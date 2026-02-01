@@ -164,27 +164,24 @@ function calculateStats(root: PlanNode): PlanStats {
 
 // Simple SQL syntax highlighting
 function highlightSQL(sql: string): React.ReactNode {
-  const keywords = /\b(SELECT|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|OUTER|ON|AND|OR|NOT|IN|AS|ORDER|BY|GROUP|HAVING|LIMIT|OFFSET|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|TABLE|INDEX|VIEW|SET|VALUES|INTO|DISTINCT|COUNT|SUM|AVG|MIN|MAX|CASE|WHEN|THEN|ELSE|END|NULL|IS|LIKE|BETWEEN|EXISTS|UNION|ALL|TOP|WITH|OVER|PARTITION|ROW_NUMBER|RANK|DENSE_RANK)\b/gi;
+  // Using a capturing group in split() includes the matched keywords in the result array
+  // Even indices (0, 2, 4, ...) are non-keyword text
+  // Odd indices (1, 3, 5, ...) are the captured keywords
+  const keywords =
+    /\b(SELECT|FROM|WHERE|JOIN|LEFT|RIGHT|INNER|OUTER|ON|AND|OR|NOT|IN|AS|ORDER|BY|GROUP|HAVING|LIMIT|OFFSET|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|TABLE|INDEX|VIEW|SET|VALUES|INTO|DISTINCT|COUNT|SUM|AVG|MIN|MAX|CASE|WHEN|THEN|ELSE|END|NULL|IS|LIKE|BETWEEN|EXISTS|UNION|ALL|TOP|WITH|OVER|PARTITION|ROW_NUMBER|RANK|DENSE_RANK)\b/gi;
 
   const parts = sql.split(keywords);
-  const matches = sql.match(keywords) || [];
 
-  const result: React.ReactNode[] = [];
-  let matchIndex = 0;
-
-  for (let i = 0; i < parts.length; i++) {
-    if (parts[i]) {
-      result.push(<span key={`part-${i}`} className="text-gray-100">{parts[i]}</span>);
-    }
-    if (matchIndex < matches.length) {
-      result.push(
-        <span key={`match-${matchIndex}`} className="text-blue-400 font-medium">
-          {matches[matchIndex]}
-        </span>
-      );
-      matchIndex++;
-    }
-  }
-
-  return result;
+  return parts.map((part, i) => {
+    if (!part) return null;
+    const isKeyword = i % 2 === 1;
+    return (
+      <span
+        key={i}
+        className={isKeyword ? 'text-blue-400 font-medium' : 'text-gray-100'}
+      >
+        {part}
+      </span>
+    );
+  });
 }
